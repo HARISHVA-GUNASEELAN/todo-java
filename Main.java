@@ -24,14 +24,19 @@
             tasks.add(new Task(t));
         }
         public static void markCompletedTask(ArrayList<Task>tasks){
-            System.out.print("Enter the completed the task number : ");
-            int index=sc.nextInt();
-            sc.nextLine();
-            if(index<1 || index>tasks.size()){
-                System.out.println("Enter an valid task number.");
-            }
-            else{
+            try{
+                System.out.print("Enter the completed the task number : ");
+                int index=sc.nextInt();
+                sc.nextLine();
                 tasks.get(index-1).markCompleted();;
+                
+            }
+            catch(InputMismatchException e){
+                System.out.println("Enter an valid number.");
+                sc.nextLine();
+            }
+            catch(IndexOutOfBoundsException e){
+                System.out.println("Enter an valid number.");
             }
         }
         public static void viewTask(ArrayList<Task>tasks){
@@ -46,6 +51,7 @@
                     System.out.println(count+"."+
                     temp.getTask()+"  "+
                     status);
+                    count++;
                 }
             }
         }
@@ -57,23 +63,30 @@
                 "2.Mark as Completed\n"+
                 "3.View Task\n"+
                 "4.Exit");
-                int choice=sc.nextInt();
-                sc.nextLine();
-                if(choice==1){
-                    addTask(tasks);
+                try{
+                    int choice=sc.nextInt();
+                    sc.nextLine();
+                    if(choice==1){
+                        addTask(tasks);
+                    }
+                    else if(choice==2){
+                        markCompletedTask(tasks);
+                    }
+                    else if(choice==3){
+                        viewTask(tasks);
+                    }
+                    else if (choice==4){
+                        System.out.println("Exiting..............");
+                        break;
+                    }
+                    else{
+                        System.out.println("Enter an valid choice");
+                    }
                 }
-                else if(choice==2){
-                    markCompletedTask(tasks);
-                }
-                else if(choice==3){
-                    viewTask(tasks);
-                }
-                else if (choice==4){
-                    System.out.println("Exiting..............");
-                    break;
-                }
-                else{
+                catch(InputMismatchException e){
                     System.out.println("Enter an valid choice");
+                    sc.nextLine();
+                    continue;
                 }
             }
             sc.close();

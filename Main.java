@@ -1,10 +1,15 @@
     import java.util.*;
     class Task{
+        private int ID;
         private String task;
         private boolean completed;
-        Task(String task){
+        Task(int ID,String task){
+            this.ID=ID;
             this.task=task;
             this.completed=false;
+        }
+        int getID(){
+            return ID;
         }
         String getTask(){
             return task;
@@ -18,26 +23,61 @@
     }
     public class Main{
         static Scanner sc=new Scanner(System.in);
+        static int taskId=1;
         public static void addTask(ArrayList<Task>tasks){
             System.out.print("Enter the task: ");
             String t=sc.nextLine();
-            tasks.add(new Task(t));
+            tasks.add(new Task(taskId,t));
+            taskId++;
         }
         public static void markCompletedTask(ArrayList<Task>tasks){
             try{
-                System.out.print("Enter the completed the task number : ");
+                System.out.print("Enter the completed task ID : ");
                 int index=sc.nextInt();
                 sc.nextLine();
-                tasks.get(index-1).markCompleted();;
-                
+                boolean found=false;
+                for(Task temp:tasks){
+                    if(temp.getID()==index){
+                        found=true;
+                        temp.markCompleted();
+                        break;
+                    }
+                }
+                if(!found){
+                    System.out.println("Enter an valid Task ID");
+                }
             }
             catch(InputMismatchException e){
                 System.out.println("Enter an valid number.");
                 sc.nextLine();
             }
-            catch(IndexOutOfBoundsException e){
+            /*catch(IndexOutOfBoundsException e){
                 System.out.println("Enter an valid number.");
+            }*/
+        }
+        public static void deleteTask(ArrayList<Task>tasks){
+            try{
+                System.out.println("Enter the task ID to delete: ");
+                int index=sc.nextInt();
+                sc.nextLine();
+                boolean found=false;
+                for(Task temp:tasks){
+                    if(temp.getID()==index){
+                        tasks.remove(temp);
+                        found=true;
+                        break;
+                    }
+                }
+                if(!found){
+                    System.out.println("Enter a valid TaskID");
+                }
             }
+            catch(InputMismatchException e){
+                System.out.println("Enter a valid  Number.");
+            }
+            /*catch(IndexOutOfBoundsException e){
+                System.out.println("Enter a valid Task Number.");
+            }*/
         }
         public static void viewTask(ArrayList<Task>tasks){
             if(tasks.isEmpty()){
@@ -45,13 +85,11 @@
             }
             else{
                 System.out.println("Tasks: ");
-                int count=1;
                 for(Task temp:tasks){
-                    String status=(temp.isCompleted())?"[Completed]":"[Pending]";
-                    System.out.println(count+"."+
-                    temp.getTask()+"  "+
-                    status);
-                    count++;
+                    String status=(temp.isCompleted())?"[X]":"[ ]";
+                    System.out.println(temp.getID()+". "+
+                    status+"  "+
+                    temp.getTask());
                 }
             }
         }
@@ -61,8 +99,9 @@
                 System.out.println("choice\n"+
                 "1.Add Task\n"+
                 "2.Mark as Completed\n"+
-                "3.View Task\n"+
-                "4.Exit");
+                "3.Delete Task\n"+
+                "4.View Task\n"+
+                "5.Exit");
                 try{
                     int choice=sc.nextInt();
                     sc.nextLine();
@@ -73,9 +112,12 @@
                         markCompletedTask(tasks);
                     }
                     else if(choice==3){
-                        viewTask(tasks);
+                        deleteTask(tasks);
                     }
                     else if (choice==4){
+                        viewTask(tasks);
+                    }
+                    else if(choice==5){
                         System.out.println("Exiting..............");
                         break;
                     }
